@@ -10,8 +10,8 @@ module.export=(DB,type) => {
         },
         claveTienda:{
             type: type.INETEGER,
-            primarykey:true,
-            autoincrement:true
+            primaryKey:true,
+            autoIncrement:true
         },
         nombreTienda:{
             type: type.STRING,
