@@ -9,7 +9,7 @@ module.export=(DB,type) => {
             }
         },
         claveTienda:{
-            type: type.INETEGER,
+            type: type.INTEGER,
             primarykey:true,
             autoincrement:true
         },
