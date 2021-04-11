@@ -1,6 +1,6 @@
 module.export=(DB,type) => {
     return DB.define('cliente', {
-        idProspecto: {
+        idCliente: {
             type: type.INTEGER,
             primaryKey:true,
             references:{

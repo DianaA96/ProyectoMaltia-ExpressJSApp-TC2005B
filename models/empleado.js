@@ -17,7 +17,9 @@ module.export=(DB,type) => {
          },
         apellidoMaterno:{
             type: type.STRING,
-            noEmpty:true,
+            /*noEmpty:true,
+            puede solo tener un apellido 
+            */
          },
         correoElectronico: {
              type:type.STRING,

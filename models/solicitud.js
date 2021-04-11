@@ -10,16 +10,16 @@ module.export=(DB,type) => {
         idAnalista: {
             type: type.INTEGER,
             references:{
-                model: empleado,
-                key: idEmpleado
+                model: analista,
+                key: idAnalista
            }
         },
 
         idAsesor: {
             type: type.INTEGER,
             references:{
-                model: empleado,
-                key: idEmpleado
+                model: asesor,
+                key: idAsesor
            }
         },
 
@@ -27,7 +27,7 @@ module.export=(DB,type) => {
             type: type.INTEGER,
             references:{
                 model: cliente,
-                key: idProspecto
+                key: idCliente
            }
         },
 
