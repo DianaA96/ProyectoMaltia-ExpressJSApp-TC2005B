@@ -21,6 +21,10 @@ const DB = new Sequelize(
     }
 )
 
+//models
+
+
+
 DB.authenticate()
     .then(() => {
         console.log('Connection was established successfully.')
