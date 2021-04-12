@@ -1,6 +1,6 @@
 module.export=(DB,type) => {
     return DB.define('analista', {
-        idEmpleado: {
+        idAnalista: {
              type: type.INTEGER,
              primaryKey:true,
              references:{
@@ -10,7 +10,7 @@ module.export=(DB,type) => {
         },
         departamento:{
             type: type.INTEGER,
-            defaultValue:("Oficina Central"),
+            defaultValue:("OFICINA CENTRAL"),
         }
     },{
         paranoid:true

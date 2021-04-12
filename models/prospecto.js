@@ -2,7 +2,7 @@ const { BOOLEAN } = require("sequelize");
 
 module.export=(DB,type) => {
     return DB.define('prospecto', {
-        idCliente: {
+        idProspecto: {
              type: type.INTEGER,
              primaryKey:true,
              autoIncrement:true,
@@ -10,12 +10,16 @@ module.export=(DB,type) => {
         idAsesor: {
             type: type.INTEGER,
             references:{
-                model:empleado,
-                key:idEmpleado,
+                model:asesor,
+                key:idAsesor,
            }
         },
         claveTienda:{
             type:type.INTEGER,
+            references:{
+                model:tienda,
+                key:claveTienda,
+            }
         },
         nombre:{
             type: type.STRING,
