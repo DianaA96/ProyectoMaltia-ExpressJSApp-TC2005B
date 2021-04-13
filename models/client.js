@@ -1,11 +1,11 @@
 module.export=(DB,type) => {
-    return DB.define('cliente', {
-        idCliente: {
+    return DB.define('client', {
+        idClient: {
             type: type.INTEGER,
             primaryKey:true,
             references:{
-               model:prospecto,
-               key:idProspecto,
+               model:prospect,
+               key:idProspect,
           }
        },
        fechaNacimiento:{

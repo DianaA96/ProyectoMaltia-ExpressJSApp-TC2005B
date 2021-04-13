@@ -1,8 +1,8 @@
 const { BOOLEAN } = require("sequelize");
 
 module.export=(DB,type) => {
-    return DB.define('empleado', {
-        idEmpleado: {
+    return DB.define('employee', {
+        idEmployee: {
              type: type.INTEGER,
              primaryKey:true,
              autoIncrement:true,
@@ -17,9 +17,6 @@ module.export=(DB,type) => {
          },
         apellidoMaterno:{
             type: type.STRING,
-            /*noEmpty:true,
-            puede solo tener un apellido 
-            */
          },
         correoElectronico: {
              type:type.STRING,
@@ -30,7 +27,7 @@ module.export=(DB,type) => {
              }
          },
         numTelefono:{
-            type: type.STING,
+            type: type.STRING,
             noEmpty:true,
             unique:true,
         },
@@ -41,11 +38,7 @@ module.export=(DB,type) => {
         contrasena: {
             type:type.STRING,
             noEmpty:true,
-        },
-        activo:{
-            type: type.BOOLEAN,
-            default: false
-        },
+        }
      },{
          paranoid:true
      });
