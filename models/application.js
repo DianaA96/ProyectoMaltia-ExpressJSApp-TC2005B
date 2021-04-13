@@ -1,33 +1,33 @@
 module.export=(DB,type) => {
 
-    return DB.define('solicitud', {
+    return DB.define('application', {
 
-        idSolicitud: {
+        idApplication: {
             type: type.INTEGER,
             primaryKey: true,
         },
 
-        idAnalista: {
+        idAnalyst: {
             type: type.INTEGER,
             references:{
-                model: analista,
-                key: idAnalista
+                model: analyst,
+                key: idAnalyst
            }
         },
 
-        idAsesor: {
+        idAssessor: {
             type: type.INTEGER,
             references:{
-                model: asesor,
-                key: idAsesor
+                model: assessor,
+                key: idAssessor
            }
         },
 
-        idCliente: {
+        idClient: {
             type: type.INTEGER,
             references:{
-                model: cliente,
-                key: idCliente
+                model: client,
+                key: idClient
            }
         },
 
@@ -47,7 +47,7 @@ module.export=(DB,type) => {
         },
 
         estatus: {
-            type: type.STRING,
+            type: type.ENUM('Autorizado', 'No autorizado', 'No revisado', 'Dispuesto'),
         },
 
         firmaSolicitud: {

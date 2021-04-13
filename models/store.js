@@ -1,14 +1,14 @@
 module.export=(DB,type) => {
-    return DB.define('tienda', {
-        idAsesor: {
-             type: type.STRING,
+    return DB.define('store', {
+        idAssessor: {
+             type: type.INTEGER,
              noEmpty:true,
              references:{
-                 model:asesor,
-                 key:idAsesor,
+                 model:assessor,
+                 key:idAssessor,
             }
         },
-        claveTienda:{
+        idStore:{
             type: type.INTEGER,
             primarykey:true,
             autoIncrement:true

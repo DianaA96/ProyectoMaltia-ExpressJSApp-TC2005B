@@ -1,11 +1,11 @@
 module.export=(DB,type) => {
-    return DB.define('administrador', {
-        idAdministrador: {
+    return DB.define('analyst', {
+        idAnalyst: {
              type: type.INTEGER,
              primaryKey:true,
              references:{
-                model:empleado,
-                key:idEmpleado,
+                model:employee,
+                key:idEmployee,
            }
         },
         departamento:{
