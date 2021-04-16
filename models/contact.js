@@ -17,11 +17,9 @@ module.export=(DB,type) => {
        },
        contactDate:{
            type: type.DATE,
-           primaryKey:true,
        },
         engagement:{
            type:type.ENUM('No atiende','No está interesado','Número equivocado','Inicia solicitud','Tomando una decisión'),
-            primaryKey:true,
         }
     },{
         paranoid:true

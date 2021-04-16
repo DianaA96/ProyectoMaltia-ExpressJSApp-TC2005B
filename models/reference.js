@@ -18,7 +18,6 @@ module.export=(DB,type) => {
 
         refNumber:{
             type: type.STRING,
-            primaryKey: true,
             noEmpty:true,
             unique:true,
         }
