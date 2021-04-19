@@ -1,31 +1,31 @@
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
     return DB.define('prospect', {
         idProspect: {
              type: type.INTEGER,
              primaryKey:true,
              autoIncrement:true,
-         },
+        },
         idAssessor: {
-            type: type.INTEGER,
+            type: type.STRING,
             references:{
-                model:assessor,
-                key:idAssessor,
+                model: 'assessor',
+                key: 'idAssessor',
            }
         },
         idStore:{
             type:type.INTEGER,
             references:{
-                model:store,
-                key:idStore,
+                model: 'store',
+                key: 'idStore',
             }
         },
         nombre:{
             type: type.STRING,
-            noEmpty:true
+            allowNull: false
         },
         apellidoPaterno:{
             type:type.STRING,
-            noEmpty:true
+            allowNull: false
         },
         apellidoMaterno:{
             type:type.STRING,
@@ -39,7 +39,7 @@ module.export=(DB,type) => {
         },
         numTelefono:{
             type:type.STRING,
-            noEmpty:true,
+            allowNull: false,
             unique:true,
         }
     },{
