@@ -22,6 +22,8 @@ module.exports=(DB,type) => {
            type:type.ENUM('No atiende','No está interesado','Número equivocado','Inicia solicitud','Tomando una decisión'),
         }
     },{
-        paranoid:true
+        // paranoid:true
+        timestamps: false,
+        paranoid: false,
     });
 }

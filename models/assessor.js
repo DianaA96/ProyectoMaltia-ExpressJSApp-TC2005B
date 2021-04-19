@@ -9,6 +9,7 @@ module.exports=(DB,type) => {
            }
         }
     },{
+        // paranoid:true
         timestamps: false,
         paranoid: false,
     });

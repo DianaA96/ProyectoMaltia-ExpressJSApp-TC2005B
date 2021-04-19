@@ -39,6 +39,7 @@ module.exports=(DB,type) => {
         }
      },{
         //soft delete option
+        // paranoid:true
         timestamps: false,
         paranoid: false,
      });

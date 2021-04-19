@@ -25,6 +25,8 @@ module.exports = (DB,type) => {
             unique:true
         }
     },{
-        paranoid:true
+        // paranoid:true
+        timestamps: false,
+        paranoid: false,
     });
 }
