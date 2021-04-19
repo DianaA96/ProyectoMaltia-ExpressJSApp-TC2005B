@@ -18,11 +18,11 @@ router.patch('/:idEmployee/analysts/:idAnalyst', async (req, res, next) => {
             return res.status(200).json({
                 empleadoActualizado: empleado,
                 analistaActualizado: analista
-            })
+                })
         } else {
             return res.status(404).json({
                 name: "Not Found",
-                message: "El empleado que intentas modificar no existe :("
+                message: "El analista que intentas modificar no existe :("
                 })
             }
         } catch(err) {
@@ -31,41 +31,41 @@ router.patch('/:idEmployee/analysts/:idAnalyst', async (req, res, next) => {
     }
 )
 
-// Endpoint para crear un analista
+// Endpoint para crear un analista 
+// (añadirá siempre el rol de analista, incluso si el usuario especifica un rol distinto)
 router.post('/analysts', async (req, res, next) => {
     
-    const { employee, analyst } = req.body
+    const { employee } = req.body
+    let empleadoAnalista =  employee
+    empleadoAnalista.puesto = "Analista"
     
     try {
-        console.log(employee)
-        await Employee.create(employee)
-        let nuevoUsuario = Employee.findByPk(employee.idEmployee)
-        console.log(nuevoUsuario)
-        if(nuevoUsuario) {
-            await Analyst.create(analyst)
-            return res.status(201).json({empleado: employee, analista: analyst})
-        }
+        await Employee.create(empleadoAnalista)
+        await Analyst.create({ idAnalyst: employee.idEmployee })
+        return res.status(201).json({employee: empleadoAnalista})
     } catch(err) {
         next(err);
     }
 })
 
 // Endpoint para crear un asesor
+// (añadirá siempre el rol de asesor, incluso si el usuario especifica un rol distinto)
 router.post('/assessors', async (req, res, next) => {
     
-    const { employee, assessor } = req.body
+    const { employee } = req.body
+    let empleadoAsesor =  employee
+    empleadoAsesor.puesto = "Asesor"
     
     try {
-        console.log('Ya entré al try')
-        console.log(employee)
-        await Employee.create(employee)
-        console.log('Ya creé al empleado')
-        let nuevoUsuario = Employee.findByPk(employee.idEmployee)
-        console.log(nuevoUsuario)
-        if(nuevoUsuario) {
-            await Assessor.create(assessor)
-            return res.status(201).json({empleado: employee, asesor: assessor})
-        }
+        // Consultar la conveniencia del condicional aquí
+        // En ambos endpoints ya no es necesario el json con
+        // el id del asesor/analista, el endpoint creará ambas instancias
+        // con el mismo id.
+        // Es necesario ver cómo lograr que ambos inserts se hagan
+        // o ninguno xd. 
+        await Employee.create(empleadoAsesor)
+        await Assessor.create({ idAssessor: employee.idEmployee })
+        return res.status(201).json({employee: empleadoAsesor})
     } catch(err) {
         next(err);
     }
@@ -77,17 +77,22 @@ router.patch('/:idEmployee', async (req, res, next) => {
     const { employee } = req.body;
 
     try{
-        let empleado = await Employee.findByPk(idEmployee)
+        //teníamos que verificar que existe en ambas tablas
+        //para no modificar empleados que no sean asesores
+        // y mantener la integridad de la bd.
+        let empleadoExiste = await Employee.findByPk(idEmployee)
+        let empleadoEsAsesor = await Asesor.findByPk(idEmployee)
 
-        if(empleado) {
-            await empleado.update(employee)
+        if(empleadoExiste && empleadoEsAsesor) {
+            await empleadoExiste.update(employee)
+            await empleadoEsAsesor.update({idAssessor: employee.idEmployee})
             return res.status(200).json({
-                empleadoActualizado: empleado
+                empleadoActualizado: empleadoExiste
             })
         } else {
             return res.status(404).json({
                 name: "Not Found",
-                message: "El empleado que intentas modificar no existe :("
+                message: "El asesor que intentas modificar no existe :("
                 })
             }
         } catch(err) {
