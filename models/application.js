@@ -89,6 +89,8 @@ module.exports=(DB,type) => {
         },
 
     },{
-        paranoid:true
+        // paranoid:true
+        timestamps: false,
+        paranoid: false,
     });
 }

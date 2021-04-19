@@ -27,6 +27,8 @@ module.exports=(DB,type) => {
             allowNull: false
         }
         },{
-            paranoid:true
+            // paranoid:true
+            timestamps: false,
+            paranoid: false,
         });
 }

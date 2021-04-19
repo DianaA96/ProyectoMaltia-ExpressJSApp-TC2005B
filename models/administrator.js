@@ -13,6 +13,8 @@ module.exports = (DB,type) => {
             defaultValue:("OFICINA CENTRAL"),
         }
     },{
-        paranoid:true
+        // paranoid:true
+        timestamps: false,
+        paranoid: false,
     })
 };
