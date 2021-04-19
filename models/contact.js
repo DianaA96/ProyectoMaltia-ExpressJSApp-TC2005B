@@ -1,27 +1,25 @@
 /*dejar al ultimo, preguntar a Grettel si la retro 
 en esta tabla es correcta*/
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
     return DB.define('contact', {
         idContact: {
              type: type.INTEGER,
              primaryKey:true,
-             autoIncrement: true
+             autoIncrement: true,
         },
         idProspect: {
             type: type.INTEGER,
             primaryKey:true,
             references:{
-               model:prospect,
-               key:idProspect,
+               model: 'prospect',
+               key: 'idProspect',
           }
        },
-       contactDate:{
+       fechaContacto:{
            type: type.DATE,
-           primaryKey:true,
        },
-        engagement:{
+        compromiso:{
            type:type.ENUM('No atiende','No está interesado','Número equivocado','Inicia solicitud','Tomando una decisión'),
-            primaryKey:true,
         }
     },{
         paranoid:true

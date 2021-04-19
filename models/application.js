@@ -1,4 +1,4 @@
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
 
     return DB.define('application', {
 
@@ -8,42 +8,42 @@ module.export=(DB,type) => {
         },
 
         idAnalyst: {
-            type: type.INTEGER,
+            type: type.STRING,
             references:{
-                model: analyst,
-                key: idAnalyst
+                model: 'analyst',
+                key: 'idAnalyst'
            }
         },
 
         idAssessor: {
-            type: type.INTEGER,
+            type: type.STRING,
             references:{
-                model: assessor,
-                key: idAssessor
+                model: 'assessor',
+                key: 'idAssessor'
            }
         },
 
         idClient: {
             type: type.INTEGER,
             references:{
-                model: client,
-                key: idClient
+                model: 'client',
+                key: 'idClient'
            }
         },
 
         creditoSolicitado: {
             type: type.ENUM('simple','revolvente'),
-            noEmpty: true,
+            allowNull: false,
         },
 
         montoSolicitado: {
             type: type.FLOAT,
-            noEmpty: true
+            allowNull: false
         },
 
         fechaSolicitud: {
             type: type.DATE,
-            noEmpty: true
+            allowNull: false
         },
 
         estatus: {
@@ -52,7 +52,7 @@ module.export=(DB,type) => {
 
         firmaSolicitud: {
             type: type.BOOLEAN,
-            noEmpty: true
+            allowNull: false
         },
 
         altaIsi: {
@@ -77,7 +77,7 @@ module.export=(DB,type) => {
 
         creditoAutorizado: {
             type: type.ENUM('simple','revolvente'),
-            noEmpty: true,
+            allowNull: false,
         },
 
         montoAutorizado: {
