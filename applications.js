@@ -9,8 +9,8 @@ const { Refer } = require('./database');
 router.post('/clients/references', async (req, res, next) => {
     
     const { client, application, reference1, reference2, reference3 } = req.body
-    const { idProspect, idAssessor } = client
-    const applicant = await Prospect.findByPk(idProspect)
+    const { idClient, idAssessor } = application
+    const applicant = await Prospect.findByPk(idClient)
     const associatedEmployee = await Assessor.findByPk(idAssessor)
     
     try { 
@@ -26,6 +26,11 @@ router.post('/clients/references', async (req, res, next) => {
                 reference1,
                 reference2,
                 reference3
+            })
+        } else {
+            return res.status(404).json({
+                name: "Not Found",
+                message: "No existen prospectos y asesores asociados :("
             })
         }
     }   catch(err) {

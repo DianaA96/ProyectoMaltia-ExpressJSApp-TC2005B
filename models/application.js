@@ -45,11 +45,6 @@ module.exports=(DB,type) => {
             allowNull: false
         },
 
-        createdAt: {
-            type: type.STRING,
-            allowNull: false
-        },
-
         estatus: {
             type: type.ENUM('Autorizado', 'No autorizado', 'No revisado', 'Dispuesto'),
         },
@@ -68,7 +63,7 @@ module.exports=(DB,type) => {
         },
 
         fechaAuditoria: {
-            type: type.STRING
+            type: type.DATE
         },
 
         auditoriaBuro: {

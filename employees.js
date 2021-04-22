@@ -60,13 +60,22 @@ router.post('/analysts', async (req, res, next) => {
         await Analyst.create({ 
             idAnalyst: employee.idEmployee,
             departamento: analyst.departamento
-         })
-
-        return res.status(201).json({employee: empleadoAnalista})
+            })
+        let {idEmployee, nombre, apellidoPaterno, apellidoMaterno, correoElectronico, numTelefono, puesto} = empleadoAnalista
+        return res.status(201).json({
+            idEmployee, 
+            nombre, 
+            apellidoPaterno, 
+            apellidoMaterno, 
+            correoElectronico, 
+            numTelefono, 
+            puesto
+        })
     } catch(err) {
         next(err);
+        }
     }
-})
+)
 
 // Endpoint para crear un asesor 
 router.post('/assessors', async (req, res, next) => {
@@ -79,13 +88,15 @@ router.post('/assessors', async (req, res, next) => {
         await Employee.create(empleadoAsesor)
         await Assessor.create({ idAssessor: employee.idEmployee })
         return res.status(201).json({employee: empleadoAsesor})
-    } catch(err) {
+    } 
+    catch(err) {
         next(err);
+        }
     }
-})
+)
 
 // Endpoint para actualizar los datos de un asesor
-router.patch('/:idEmployee', async (req, res, next) => {
+router.patch('/:idEmployee/assessor', async (req, res, next) => {
 
     const { idEmployee } = req.params;
     const { employee } = req.body;
@@ -148,8 +159,9 @@ router.get('/analysts', async(req, res, next) => {
                 name: "Not Found",
                 message: "Lo sentimos, el analista no existe :("
             })
-        } } catch (err) {
-            next(err)
+        } 
+    } catch (err) {
+        next(err)
         }
     }
 )
@@ -178,12 +190,15 @@ router.get('/assessors', async(req, res, next) => {
 
         if(datosEmpleado && datosTienda) {
             return res.status(200).json({datosEmpleado, datosTienda})
-        } else {
+        } 
+        else {
             return res.status(404).json({
                 name: "Not Found",
                 message: "Lo sentimos, el asesor no existe :("
-            })
-        } } catch (err) {
+                }
+            )
+        } 
+    }   catch (err) {
             next(err)
         }
     }
@@ -205,8 +220,8 @@ router.get('/:idEmployee', (req, res, next) => {
                     message: "El empleado que buscas no existe :("
                 })
             }
-            
-        }) .catch (
+        }) 
+        .catch (
             (err) => next(err)
         )
     }
@@ -231,24 +246,24 @@ router.delete('/:idEmployee', async (req, res, next) => {
                 message: "El empleado que intentas eliminar no existe :("
             })
         }
-    }
-
-    catch(err){
+    } catch(err){
         next(err);
-    }
-    
-})
+        }
+    }  
+)
 
 // Endpoint para obtener los datos de todos los empleados
 router.get('/', (req, res, next) => {
     Employee.findAll({attributes:
-     ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'puesto']
-    }) .then ((allEmployees) => {
+    ['nombre', 'apellidoPaterno', 'apellidoMaterno', 'puesto']}) 
+    .then ((allEmployees) => {
             return res.status(200).json({empleados: allEmployees})
-        }) .catch (
-            (err) => next(err)
+            }) 
+    .catch (
+        (err) => next(err)
         )
-})
+    }
+)
 
 // Se exporta el router
 module.exports = router

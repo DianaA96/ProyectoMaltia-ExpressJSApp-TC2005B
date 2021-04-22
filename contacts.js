@@ -7,7 +7,7 @@ const { Prospect, Contact } = require('./database');
 router.post('/', async(req, res, next) => {
     
     const { idProspect, idContact, compromiso } = req.body
-    const contacto = { idContact, idProspect, compromiso }
+    const contacto = req.body
 
     try {
         let prospecto = await Prospect.findByPk(idProspect)
@@ -20,7 +20,7 @@ router.post('/', async(req, res, next) => {
                 message: "El prospecto al que haces referencia no existe :("
             })
         }
-    } catch {
+    } catch(err) {
         next(err)
     }
 })
