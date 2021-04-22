@@ -53,7 +53,9 @@ app.get('/clients/applications', (req, res, next) => {
 
 // Endpoint que recupera el nombre completo y el id de todos los prospectos que también son clientes
 app.get('/prospects/clients', (req, res, next) => {
-        
+
+    const { thisEmployee: idEmployee } = req.query
+
     // Raw SQL Query
     DB.query(
         `SELECT 
@@ -61,17 +63,17 @@ app.get('/prospects/clients', (req, res, next) => {
         [nombre],
         [apellidoPaterno],
         [apellidoMaterno],
-        [idApplication]
+        [idApplication],
+        [estatus]
         FROM [clients] JOIN [applications] ON [applications].[idClient] = [clients].[idClient]
         JOIN [prospects] ON [prospects].[idProspect] = [clients].[idClient]
-        WHERE [prospects].[deletedAt] IS NULL 
+        WHERE [applications].[idAssessor]= ${idEmployee} OR [applications].[idAnalyst] = ${idEmployee}
+        AND [prospects].[deletedAt] IS NULL 
         AND [applications].[deletedAt] IS NULL 
         AND [clients].[deletedAt] IS NULL`)
-        .then((result) => {
-            let [ [datosProspecto], idApplication ] = result
+        .then((solicitudes) => {
             return res.status(200).json({
-                    datosProspecto,
-                    idApplication
+                    solicitudes
                 })
             }) 
         .catch ((err) => {
@@ -110,11 +112,10 @@ app.get('/applications/full-application-data/:idProspecto', async(req, res, next
                 (SELECT
                 COUNT([contacts].[idProspect])
                 FROM [contacts]
-                GROUP BY [contacts].[idProspect]) AS [numeroContactos]
-            
+                WHERE contacts.idProspect = ${idProspecto}) AS [numeroContactos]
             FROM [applications] JOIN [clients] ON [applications].[idClient] = [clients].[idClient]
             JOIN [prospects] ON [clients].[idClient] = [prospects].[idProspect]
-            WHERE [idProspect] = ${idProspecto} 
+            WHERE [idProspect] = ${idProspecto}
             AND [applications].[deletedAt] IS NULL
             AND [clients].[deletedAt] IS NULL
             AND [prospects].[deletedAt] IS NULL`)
@@ -156,7 +157,7 @@ app.listen(port, () => {
     }) 
     
 // Coladera de errores-- Endpoint next
-app.use((err,req,res,next)=>{
+app.use((err, req, res, next)=>{
     console.error(err.stack);
     return res.status(500).json({
         "name":err.name,

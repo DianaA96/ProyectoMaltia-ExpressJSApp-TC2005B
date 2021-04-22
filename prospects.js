@@ -61,21 +61,25 @@ router.get('/:idProspect', (req, res, next) => {
                     message: "El prospecto que buscas no existe :("
                 })
             }
-        }) .catch (
-            (err) => next(err)
+        }) 
+    .catch (
+        (err) => next(err)
         )
     }
 )
 
 //Endpoint que listará todos los prospectos asociados a un asesor
 router.get('/', (req, res, next) => {
+
     const { thisAssessor: idAssessor } = req.query
+
     Prospect.findAll({attributes:
      ['idProspect', 'nombre', 'apellidoPaterno', 'apellidoMaterno'],
      where: {
          idAssessor
      } 
-    }) .then ((prospectos) => {
+    }) 
+    .then ((prospectos) => {
         const [ prospectosAsesor ] = prospectos
             if(prospectosAsesor) {
                 return res.status(200).json({prospectos})
@@ -85,10 +89,13 @@ router.get('/', (req, res, next) => {
                     message: "Lo sentimos, el asesor aún no tiene prospectos :("
                 })
             }
-        }) .catch (
-            (err) => next(err)
+        }
+    ) 
+    .catch (
+        (err) => next(err)
         )
-})
+    }
+)
 
 // Endpoint para insertar prospectos nuevos en la vista de añadir prospecto
 router.post('/', async (req, res, next) => {
@@ -100,8 +107,9 @@ router.post('/', async (req, res, next) => {
         return res.status(201).json({prospect})
     } catch(err) {
         next(err);
+        }
     }
-})
+)
 
 // Endpoint que actualiza la información del prospecto
 router.patch('/:idProspect', async(req, res, next) => {
@@ -122,8 +130,9 @@ router.patch('/:idProspect', async(req, res, next) => {
         }
     } catch(err) {
         next(err);
+        }
     }
-})
+)
 
 // Se exporta el router
 module.exports = router
