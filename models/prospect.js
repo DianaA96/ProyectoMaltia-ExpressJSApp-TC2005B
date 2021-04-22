@@ -38,10 +38,6 @@ module.exports=(DB,type) => {
             type:type.STRING,
         },
 
-        createdAt:{
-            type:type.STRING,
-        },
-
         correoElectronico:{
             type:type.STRING,
             unique:true,

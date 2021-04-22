@@ -16,10 +16,6 @@ module.exports=(DB,type) => {
                key: 'idProspect',
           }
        },
-
-       fechaContacto:{
-           type: type.DATE,
-       },
        
         compromiso:{
            type:type.ENUM('No atiende','No está interesado','Número equivocado','Inicia solicitud','Tomando una decisión'),
