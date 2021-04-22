@@ -1,5 +1,6 @@
 // Se importan las librerías necesarias
 const express = require('express');
+const { QueryTypes } = require('sequelize');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
@@ -37,12 +38,11 @@ app.get('/clients/applications', (req, res, next) => {
         [applications].[idApplication]
         FROM [prospects] JOIN [applications] 
         ON [idProspect] = [idClient]
-        WHERE [prospects].[deletedAt] IS NULL AND [applications].[deletedAt] IS NULL`)
-        .then((result) => {
-            let [ [datosProspecto], idApplication ] = result
+        WHERE [prospects].[deletedAt] IS NULL AND [applications].[deletedAt] IS NULL`,
+        { type: QueryTypes.SELECT })
+        .then((datosProspecto) => {
             return res.status(200).json({
-                datosProspecto,
-                idApplication
+                datosProspecto
             })
         }) 
         .catch ((err) => {
@@ -70,12 +70,14 @@ app.get('/prospects/clients', (req, res, next) => {
         WHERE [applications].[idAssessor]= ${idEmployee} OR [applications].[idAnalyst] = ${idEmployee}
         AND [prospects].[deletedAt] IS NULL 
         AND [applications].[deletedAt] IS NULL 
-        AND [clients].[deletedAt] IS NULL`)
-        .then((solicitudes) => {
+        AND [clients].[deletedAt] IS NULL`,
+        { type: QueryTypes.SELECT })
+        .then((queryResult) => {
             return res.status(200).json({
-                    solicitudes
-                })
-            }) 
+                solicitudes: queryResult
+            })
+        }
+        )
         .catch ((err) => {
             next(err);
         })
@@ -118,7 +120,8 @@ app.get('/applications/full-application-data/:idProspecto', async(req, res, next
             WHERE [idProspect] = ${idProspecto}
             AND [applications].[deletedAt] IS NULL
             AND [clients].[deletedAt] IS NULL
-            AND [prospects].[deletedAt] IS NULL`)
+            AND [prospects].[deletedAt] IS NULL`,
+            { type: QueryTypes.SELECT })
 
         let info2 = await Refer.findAll({
             attributes:
@@ -127,6 +130,7 @@ app.get('/applications/full-application-data/:idProspecto', async(req, res, next
                 idClient: idProspecto
             }
         });
+        
         if(info1 && info2) {
             return res.status(200).json({
                 infoSolicitud: info1,
