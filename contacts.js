@@ -25,4 +25,5 @@ router.post('/', async(req, res, next) => {
     }
 })
 
+// Se exporta el router
 module.exports = router

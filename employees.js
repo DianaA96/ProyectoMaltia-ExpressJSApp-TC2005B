@@ -1,23 +1,40 @@
+// Importamos Express, el Router y los modelos necesarios para las queries
 const express = require('express');
 const router = express.Router();
 const { Employee, Analyst } = require('./database');
-const { Assessor } = require('./database');
+const { Assessor, Store } = require('./database');
 
 // Endpoint para actualizar los datos de un analista
-router.patch('/:idEmployee/analysts/:idAnalyst', async (req, res, next) => {
-    const { idEmployee, idAnalyst } = req.params;
+router.patch('/:idEmployee/analysts/', async (req, res, next) => {
+    const { idEmployee } = req.params;
     const { employee, analyst } = req.body;
 
     try{
         let empleado = await Employee.findByPk(idEmployee)
-        let analista = await Analyst.findByPk(idAnalyst)
+        let analista = await Analyst.findByPk(idEmployee)
 
         if(empleado && analista) {
             await empleado.update(employee)
             await analista.update(analyst)
+
+            let {
+                idEmployee,
+                nombre,
+                apellidoPaterno,
+                apellidoMaterno,
+                correoElectronico,
+                numTelefono,
+                puesto
+            } = empleado
+
+            let {
+                idAnalyst,
+                departamento
+            } = analista
+
             return res.status(200).json({
-                empleadoActualizado: empleado,
-                analistaActualizado: analista
+                empleadoActualizado: {idEmployee, nombre, apellidoPaterno, apellidoMaterno, correoElectronico, numTelefono, puesto},
+                analistaActualizado: {idAnalyst, departamento}
                 })
         } else {
             return res.status(404).json({
@@ -32,24 +49,26 @@ router.patch('/:idEmployee/analysts/:idAnalyst', async (req, res, next) => {
 )
 
 // Endpoint para crear un analista 
-// (añadirá siempre el rol de analista, incluso si el usuario especifica un rol distinto)
 router.post('/analysts', async (req, res, next) => {
     
-    const { employee } = req.body
+    const { employee, analyst } = req.body
     let empleadoAnalista =  employee
     empleadoAnalista.puesto = "Analista"
     
     try {
         await Employee.create(empleadoAnalista)
-        await Analyst.create({ idAnalyst: employee.idEmployee })
+        await Analyst.create({ 
+            idAnalyst: employee.idEmployee,
+            departamento: analyst.departamento
+         })
+
         return res.status(201).json({employee: empleadoAnalista})
     } catch(err) {
         next(err);
     }
 })
 
-// Endpoint para crear un asesor
-// (añadirá siempre el rol de asesor, incluso si el usuario especifica un rol distinto)
+// Endpoint para crear un asesor 
 router.post('/assessors', async (req, res, next) => {
     
     const { employee } = req.body
@@ -57,12 +76,6 @@ router.post('/assessors', async (req, res, next) => {
     empleadoAsesor.puesto = "Asesor"
     
     try {
-        // Consultar la conveniencia del condicional aquí
-        // En ambos endpoints ya no es necesario el json con
-        // el id del asesor/analista, el endpoint creará ambas instancias
-        // con el mismo id.
-        // Es necesario ver cómo lograr que ambos inserts se hagan
-        // o ninguno xd. 
         await Employee.create(empleadoAsesor)
         await Assessor.create({ idAssessor: employee.idEmployee })
         return res.status(201).json({employee: empleadoAsesor})
@@ -73,21 +86,28 @@ router.post('/assessors', async (req, res, next) => {
 
 // Endpoint para actualizar los datos de un asesor
 router.patch('/:idEmployee', async (req, res, next) => {
+
     const { idEmployee } = req.params;
     const { employee } = req.body;
 
     try{
-        //teníamos que verificar que existe en ambas tablas
-        //para no modificar empleados que no sean asesores
-        // y mantener la integridad de la bd.
         let empleadoExiste = await Employee.findByPk(idEmployee)
-        let empleadoEsAsesor = await Asesor.findByPk(idEmployee)
+        let empleadoEsAsesor = await Assessor.findByPk(idEmployee)
 
         if(empleadoExiste && empleadoEsAsesor) {
             await empleadoExiste.update(employee)
             await empleadoEsAsesor.update({idAssessor: employee.idEmployee})
+            let {
+                idEmployee,
+                nombre,
+                apellidoPaterno,
+                apellidoMaterno,
+                correoElectronico,
+                numTelefono,
+                puesto,
+            } = empleadoExiste
             return res.status(200).json({
-                empleadoActualizado: empleadoExiste
+                empleadoActualizado: {idEmployee, nombre, apellidoPaterno, apellidoMaterno, correoElectronico, numTelefono, puesto}
             })
         } else {
             return res.status(404).json({
@@ -101,22 +121,98 @@ router.patch('/:idEmployee', async (req, res, next) => {
     }
 )
 
+// Endpoint para mostrar los datos de un analista que se desee editar 
+router.get('/analysts', async(req, res, next) => {
+    const { thisAnalyst: idEmployee } = req.query
+
+    try {
+        let datosEmpleado = await Employee.findAll({
+            attributes:
+                ['idEmployee', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'correoElectronico', 'numTelefono'],
+            where: {
+                idEmployee
+            } 
+        }) 
+        let datosAnalista = await Analyst.findAll({
+            attributes:
+                ['departamento'],
+            where: {
+                idAnalyst: idEmployee
+            }
+        })
+
+        if(datosEmpleado && datosAnalista) {
+            return res.status(200).json({datosEmpleado, datosAnalista})
+        } else {
+            return res.status(404).json({
+                name: "Not Found",
+                message: "Lo sentimos, el analista no existe :("
+            })
+        } } catch (err) {
+            next(err)
+        }
+    }
+)
+
+// Endpoint para mostrar los datos de un asesor que se desee editar 
+router.get('/assessors', async(req, res, next) => {
+
+    const { thisAssessor: idEmployee } = req.query
+
+    try {
+        let datosEmpleado = await Employee.findAll({
+            attributes:
+                ['idEmployee', 'nombre', 'apellidoPaterno', 'apellidoMaterno', 'correoElectronico', 'numTelefono', 'puesto'],
+            where: {
+                idEmployee
+            } 
+        })
+
+        let datosTienda = await Store.findAll({
+            attributes:
+                ['idStore','nombreTienda','tiendaAcro'],
+            where: {
+                idAssessor: idEmployee
+            }
+        })
+
+        if(datosEmpleado && datosTienda) {
+            return res.status(200).json({datosEmpleado, datosTienda})
+        } else {
+            return res.status(404).json({
+                name: "Not Found",
+                message: "Lo sentimos, el asesor no existe :("
+            })
+        } } catch (err) {
+            next(err)
+        }
+    }
+)
+
 // Endpoint para mostrar los datos de un empleado que se desee eliminar
-router.get('/:idEmployee', async (req, res, next) => {
+router.get('/:idEmployee', (req, res, next) => {
     const { idEmployee } = req.params;
 
     Employee.findByPk(idEmployee) 
         .then ((empleado) => {
-            const { idEmployee, nombre, apellidoPaterno, apellidoMaterno } = empleado;
-            const datosEmpleado = { idEmployee, nombre, apellidoPaterno, apellidoMaterno }
-            return res.status(200).json({datosEmpleado: datosEmpleado})
+            if (empleado) {
+                const { idEmployee, nombre, apellidoPaterno, apellidoMaterno } = empleado;
+                const datosEmpleado = { idEmployee, nombre, apellidoPaterno, apellidoMaterno }
+                return res.status(200).json({datosEmpleado: datosEmpleado})
+            } else {
+                return res.status(404).json({
+                    name: "Not Found",
+                    message: "El empleado que buscas no existe :("
+                })
+            }
+            
         }) .catch (
             (err) => next(err)
         )
     }
 )
 
-// Endpoint para eliminar los datos de un empleado que se desee eliminar
+// Endpoint para eliminar los datos de un empleado
 router.delete('/:idEmployee', async (req, res, next) => {
 
     const { idEmployee } = req.params;
@@ -154,5 +250,5 @@ router.get('/', (req, res, next) => {
         )
 })
 
-
+// Se exporta el router
 module.exports = router
