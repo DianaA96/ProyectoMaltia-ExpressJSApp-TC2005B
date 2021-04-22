@@ -4,8 +4,9 @@ module.exports=(DB,type) => {
         idClient: {
              type: type.INTEGER,
              primaryKey: true,
+             foreignKey: true,
              references:{
-                 model: 'client',
+                 model: 'clients',
                  key: 'idClient'
             }
         },
@@ -22,8 +23,6 @@ module.exports=(DB,type) => {
             unique:true
         }
     },{
-        // paranoid:true
-        timestamps: false,
-        paranoid: false,
+        paranoid:true
     });
 }

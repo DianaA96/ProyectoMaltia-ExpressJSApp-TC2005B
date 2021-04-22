@@ -3,18 +3,18 @@ module.exports=(DB,type) => {
         idAnalyst: {
              type: type.STRING,
              primaryKey:true,
+             foreignKey: true,
              references:{
-                model:'employee',
+                model:'employees',
                 key:'idEmployee',
            }
         },
+        
         departamento:{
             type: type.STRING,
             defaultValue:("OFICINA CENTRAL"),
         }
     },{
-        // paranoid:true
-        timestamps: false,
-        paranoid: false,
+        paranoid:true
     });
 }

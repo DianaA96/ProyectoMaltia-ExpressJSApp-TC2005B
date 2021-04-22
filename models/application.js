@@ -5,28 +5,32 @@ module.exports=(DB,type) => {
         idApplication: {
             type: type.INTEGER,
             primaryKey: true,
+            autoIncrement: true
         },
 
         idAnalyst: {
             type: type.STRING,
+            foreignKey: true,
             references:{
-                model: 'analyst',
+                model: 'analysts',
                 key: 'idAnalyst'
            }
         },
 
         idAssessor: {
             type: type.STRING,
+            foreignKey: true,
             references:{
-                model: 'assessor',
+                model: 'assessors',
                 key: 'idAssessor'
            }
         },
 
         idClient: {
             type: type.INTEGER,
+            foreignKey: true,
             references:{
-                model: 'client',
+                model: 'clients',
                 key: 'idClient'
            }
         },
@@ -41,8 +45,8 @@ module.exports=(DB,type) => {
             allowNull: false
         },
 
-        fechaSolicitud: {
-            type: type.DATE,
+        createdAt: {
+            type: type.STRING,
             allowNull: false
         },
 
@@ -63,6 +67,10 @@ module.exports=(DB,type) => {
             type: type.DATE,
         },
 
+        fechaAuditoria: {
+            type: type.STRING
+        },
+
         auditoriaBuro: {
             type: type.BOOLEAN,
         },
@@ -77,7 +85,6 @@ module.exports=(DB,type) => {
 
         creditoAutorizado: {
             type: type.ENUM('simple','revolvente'),
-            allowNull: false,
         },
 
         montoAutorizado: {
@@ -89,8 +96,6 @@ module.exports=(DB,type) => {
         },
 
     },{
-        // paranoid:true
-        timestamps: false,
-        paranoid: false,
+        paranoid:true
     });
 }

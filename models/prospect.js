@@ -5,46 +5,54 @@ module.exports=(DB,type) => {
              primaryKey:true,
              autoIncrement:true,
         },
+
         idAssessor: {
             type: type.STRING,
+            foreignKey: true,
             references:{
-                model: 'assessor',
+                model: 'assessors',
                 key: 'idAssessor',
            }
         },
+
         idStore:{
             type:type.INTEGER,
+            foreignKey: true,
             references:{
-                model: 'store',
+                model: 'stores',
                 key: 'idStore',
             }
         },
+
         nombre:{
             type: type.STRING,
             allowNull: false
         },
+
         apellidoPaterno:{
             type:type.STRING,
             allowNull: false
         },
+
         apellidoMaterno:{
             type:type.STRING,
         },
-        fechaRegistro:{
-            type:type.DATE,
+
+        createdAt:{
+            type:type.STRING,
         },
+
         correoElectronico:{
             type:type.STRING,
             unique:true,
         },
+        
         numTelefono:{
             type:type.STRING,
             allowNull: false,
             unique:true,
         }
     },{
-        // paranoid:true
-        timestamps: false,
-        paranoid: false,
+        paranoid:true
     });
 }

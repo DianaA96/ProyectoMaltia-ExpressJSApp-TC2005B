@@ -9,24 +9,25 @@ module.exports = (DB,type) => {
 
         idAssessor: {
              type: type.STRING,
+             foreignKey: true,
              references:{
-                 model: 'assessor',
+                 model: 'assessors',
                  key: 'idAssessor',
             }
         },
+
         nombreTienda:{
             type: type.STRING,
             allowNull: false,
             unique:true
         },
+        
         tiendaAcro:{
             type:type.CHAR,
             allowNull: false,
             unique:true
         }
     },{
-        // paranoid:true
-        timestamps: false,
-        paranoid: false,
+        paranoid:true
     });
 }
