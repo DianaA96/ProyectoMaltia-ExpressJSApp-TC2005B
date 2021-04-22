@@ -5,25 +5,26 @@ module.exports=(DB,type) => {
         idContact: {
              type: type.INTEGER,
              primaryKey:true,
-             autoIncrement: true,
         },
+
         idProspect: {
             type: type.INTEGER,
             primaryKey:true,
+            foreignKey: true,
             references:{
-               model: 'prospect',
+               model: 'prospects',
                key: 'idProspect',
           }
        },
+
        fechaContacto:{
            type: type.DATE,
        },
+       
         compromiso:{
            type:type.ENUM('No atiende','No está interesado','Número equivocado','Inicia solicitud','Tomando una decisión'),
         }
     },{
-        // paranoid:true
-        timestamps: false,
-        paranoid: false,
+        paranoid:true
     });
 }
