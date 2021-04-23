@@ -27,5 +27,31 @@ router.patch('/:idStore', async(req, res, next) => {
     }
 })
 
+router.get('/allStores', (req, res, next) => {
+    
+    Store.findAll({
+        attributes: [
+            'idAssessor', 
+            'idStore',
+            'nombreTienda',
+            'tiendaAcro'
+        ]
+    })
+    .then((tiendas) => {
+            if(tiendas) {
+                return res.status(200).json({tiendas})
+            } else {
+                return res.status(404).json({
+                    name: "Not Found",
+                    message: "Oops. Algo salió mal al cargar las tiendas. No las encontramos :("
+                })
+            }
+        }
+    ) 
+    .catch (
+        (err) => next(err)
+        )
+})
+
 // Se exporta el router
 module.exports = router
