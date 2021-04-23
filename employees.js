@@ -133,7 +133,7 @@ router.patch('/:idEmployee/assessor', async (req, res, next) => {
 )
 
 // Endpoint para mostrar los datos de un analista que se desee editar 
-router.get('/analysts', async(req, res, next) => {
+router.get('/analyst', async(req, res, next) => {
     const { thisAnalyst: idEmployee } = req.query
 
     try {
@@ -153,7 +153,9 @@ router.get('/analysts', async(req, res, next) => {
         })
 
         if(datosEmpleado && datosAnalista) {
-            return res.status(200).json({datosEmpleado, datosAnalista})
+            return res.status(200).json({
+                datosEmpleado: datosEmpleado[0],
+                datosAnalista: datosAnalista[0]})
         } else {
             return res.status(404).json({
                 name: "Not Found",
@@ -167,7 +169,7 @@ router.get('/analysts', async(req, res, next) => {
 )
 
 // Endpoint para mostrar los datos de un asesor que se desee editar 
-router.get('/assessors', async(req, res, next) => {
+router.get('/assessor', async(req, res, next) => {
 
     const { thisAssessor: idEmployee } = req.query
 
@@ -189,7 +191,9 @@ router.get('/assessors', async(req, res, next) => {
         })
 
         if(datosEmpleado && datosTienda) {
-            return res.status(200).json({datosEmpleado, datosTienda})
+            return res.status(200).json({
+                datosEmpleado: datosEmpleado[0], 
+                datosTienda})
         } 
         else {
             return res.status(404).json({
