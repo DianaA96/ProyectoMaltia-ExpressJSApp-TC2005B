@@ -7,11 +7,11 @@ const { Refer } = require('./database');
 
 // Endpoint que creará las instancias de la base de datos asociadas a la construcción de la solicitud
 router.post('/clients/references', async (req, res, next) => {
-    
-    const { client, application, reference1, reference2, reference3 } = req.body
+    console.log(req.body.body)
+    const { client, application, reference1, reference2, reference3 } = req.body.body
     const { idClient, idAssessor } = application
     const applicant = await Prospect.findByPk(idClient)
-    const associatedEmployee = await Assessor.findByPk(idAssessor)
+    const associatedEmployee = await Assessor.findAll({where:{idAssessor: idAssessor}})
     
     try { 
         if(applicant && associatedEmployee) {
