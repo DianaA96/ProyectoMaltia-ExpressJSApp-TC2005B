@@ -9,10 +9,11 @@ router.patch('/:idStore', async (req, res, next) => {
     const { idStore } = req.params
     const numberIdStore = parseInt(idStore);
     const { idAssessor } = req.body.data
+    console.log(numberIdStore, idAssessor)
+    let tienda = await Store.findByPk(numberIdStore)
+    let asesorAsignado = await Assessor.findByPk(idAssessor)
     try {
-        let tienda = await Store.findByPk(numberIdStore)
-        let asesorAsignado = await Assessor.findByPk(idAssessor)
-
+        console.log(asesorAsignado)
         if(tienda && asesorAsignado) {
             await tienda.update(req.body.data,)
             return res.status(200).json({
