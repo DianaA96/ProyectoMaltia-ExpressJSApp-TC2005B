@@ -7,7 +7,7 @@ const { Assessor, Store } = require('./database');
 // Endpoint para actualizar los datos de un analista
 router.patch('/:idEmployee/analysts/', async (req, res, next) => {
     const { idEmployee } = req.params;
-    const { employee, analyst } = req.body;
+    const { employee, analyst } = req.body.body;
 
     try{
         let empleado = await Employee.findByPk(idEmployee)
@@ -99,12 +99,12 @@ router.post('/assessors', async (req, res, next) => {
 router.patch('/:idEmployee/assessor', async (req, res, next) => {
 
     const { idEmployee } = req.params;
-    const { employee } = req.body;
+    const { employee } = req.body.body;
 
     try{
         let empleadoExiste = await Employee.findByPk(idEmployee)
         let empleadoEsAsesor = await Assessor.findByPk(idEmployee)
-
+    
         if(empleadoExiste && empleadoEsAsesor) {
             await empleadoExiste.update(employee)
             await empleadoEsAsesor.update({idAssessor: employee.idEmployee})
