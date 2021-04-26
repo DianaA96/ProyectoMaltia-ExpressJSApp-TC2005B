@@ -1,5 +1,6 @@
 // Importamos Express, el Router y los modelos necesarios para las queries
 const express = require('express');
+const { Sequelize } = require('sequelize');
 const router = express.Router();
 const { Prospect, Assessor } = require('./database');
 const { Contact } = require('./database');
@@ -22,7 +23,7 @@ router.get('/:idProspecto/contacts', async(req, res, next) => {
 
             const contacto = await Contact.findAll({
                 attributes:
-                    ['compromiso'],
+                    ['compromiso', 'createdAt'],
                 where: {
                     idProspect: idProspecto
                 }
@@ -68,6 +69,62 @@ router.get('/:idProspect', (req, res, next) => {
     }
 )
 
+// Endpoint que actualiza la información del prospecto
+router.patch('/:idProspect', async(req, res, next) => {
+    const { idProspect } = req.params
+
+    // Convertimos a entero el idProspect que llega desde params
+    const parsedIdProspect = parseInt(idProspect)
+    let prospecto = await Prospect.findByPk(parsedIdProspect)
+    
+    try {
+        if(prospecto) {
+            const { nombre, apellidoPaterno, apellidoMaterno, correoElectronico} = req.body.body
+            // Convertimos a string el número de teléfono que llegará en el body
+            const numTelefono = [req.body.body.numTelefono].toString()
+
+            await prospecto.update({
+                nombre,
+                apellidoPaterno,
+                apellidoMaterno,
+                numTelefono,
+                correoElectronico
+            })
+            return res.status(200).json({
+                prospectoActualizado: {
+                    nombre,
+                    apellidoPaterno,
+                    apellidoMaterno,
+                    numTelefono,
+                    correoElectronico
+                }
+            })
+        } else {
+            return res.status(404).json({
+                name: "Not Found",
+                message: "El prospecto que intentas modificar no existe :("
+            })
+        }
+    } catch(err) {
+        next(err);
+        }
+    }
+)
+
+// Endpoint para insertar prospectos nuevos en la vista de añadir prospecto
+router.post('/', async (req, res, next) => {
+    console.log(req.body.body)
+    const { prospect } = req.body.body
+
+    try {
+        await Prospect.create(prospect)
+        return res.status(201).json({prospect})
+    } catch(err) {
+        next(err);
+        }
+    }
+)
+
 //Endpoint que listará todos los prospectos asociados a un asesor
 router.get('/', (req, res, next) => {
 
@@ -94,43 +151,6 @@ router.get('/', (req, res, next) => {
     .catch (
         (err) => next(err)
         )
-    }
-)
-
-// Endpoint para insertar prospectos nuevos en la vista de añadir prospecto
-router.post('/', async (req, res, next) => {
-    
-    const { prospect } = req.body
-
-    try {
-        await Prospect.create(prospect)
-        return res.status(201).json({prospect})
-    } catch(err) {
-        next(err);
-        }
-    }
-)
-
-// Endpoint que actualiza la información del prospecto
-router.patch('/:idProspect', async(req, res, next) => {
-    const { idProspect } = req.params
-    let prospecto = await Prospect.findByPk(idProspect)
-
-    try {
-        if(prospecto) {
-            await prospecto.update(req.body)
-            return res.status(200).json({
-                prospectoActualizado: req.body
-            })
-        } else {
-            return res.status(404).json({
-                name: "Not Found",
-                message: "El prospecto que intentas modificar no existe :("
-            })
-        }
-    } catch(err) {
-        next(err);
-        }
     }
 )
 
