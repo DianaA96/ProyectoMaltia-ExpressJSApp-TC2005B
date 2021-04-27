@@ -42,13 +42,17 @@ router.post('/clients/references', async (req, res, next) => {
 // Endpoint que actualizará los datos de una solicitud 
 router.patch('/:idApplication', async(req, res, next) => {
     const { idApplication } = req.params
-    let solicitud = await Application.findByPk(idApplication)
+
+    
 
     try {
+        let solicitud = await Application.findByPk(idApplication)
+        //console.log(req.body);
         if(solicitud) {
-            await solicitud.update(req.body)
+            await solicitud.update(req.body.body)
+            console.log(solicitud);
             return res.status(200).json({
-                solicitudActualizada: req.body
+                solicitudActualizada: solicitud
             })
         } else {
             return res.status(404).json({
