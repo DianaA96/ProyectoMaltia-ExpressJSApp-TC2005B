@@ -5,12 +5,15 @@ const { Prospect, Contact } = require('./database');
 
 // Endpoint que creará nuevas instancias de contactos asociados a un prospecto
 router.post('/', async(req, res, next) => {
+    console.log(req.body)
+    const { idProspect } = req.body.body.contacto
+    const contacto = req.body.body.contacto
     
-    const { idProspect, idContact, compromiso } = req.body
-    const contacto = req.body
+    console.log(idProspect)
 
     try {
         let prospecto = await Prospect.findByPk(idProspect)
+        console.log(prospecto)
         if(prospecto) {
             await Contact.create(contacto)
             return res.status(201).json({contacto})
