@@ -1,6 +1,8 @@
 // Importamos Express, el Router y los modelos necesarios para las queries
 const express = require('express');
 const router = express.Router();
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 const { Employee, Analyst } = require('./database');
 const { Assessor, Store } = require('./database');
 
@@ -268,6 +270,99 @@ router.get('/', (req, res, next) => {
         )
     }
 )
+
+
+router.post('/signup', async(req, res, next)=> {
+    const { body } = req;
+    console.log("body", body)
+
+    try {
+        //Buscar al usuario para saber si es que ya está registrado
+        let user = await Employee.findOne({
+            where: {correoElectronico: body.correoElectronico},
+        })
+
+        
+        if(user) {
+            return res.status(400).json({
+                message: "Lo sentimos, la cuenta ya existe",
+            })
+        }
+
+        let contrasenaNueva = await bcrypt.hash(body.contrasena, 10)
+
+        user = {...body, contrasena: contrasenaNueva}
+        
+        await Employee.create(user)
+
+        console.log("************USUARIO", user)
+
+        const payload = {
+            idEmployee: user.idEmployee,
+        }
+
+        jwt.sign(
+            payload,
+            process.env.AUTH_SECRET,
+            { expiresIn: 10800 },
+            (err, token) => {
+                return res.status(201).json({
+                    data: token,
+                });
+            }
+        )
+
+    } catch(error) {
+        next(error);
+        }
+})
+
+router.post('/login', async (req, res, next)=> {
+    const { body } = req;
+
+    try {
+        const user = await Employee.findOne({
+            where: {
+                correoElectronico: body.correoElectronico,
+            }
+        })
+
+        if (!user) {
+            return res.status(401).json({
+                data: 'Credenciales no válidas',
+            })
+        }
+
+        const isMatch = await bcrypt.compare(
+            body.contrasena,
+            user.contrasena,
+        )
+
+        if (!isMatch) {
+            return res.status(401).json({
+                data: 'Credenciales no válidas',
+            })
+        }
+
+        const payload = {
+            idEmployee: user.idEmployee,
+        }
+
+        jwt.sign(
+            payload,
+            process.env.AUTH_SECRET,
+            { expiresIn: 10800 },
+            (err, token) => {
+                return res.status(201).json({
+                    data: token,
+                });
+            }
+        )
+
+    } catch (error) {
+        
+    }
+})
 
 // Se exporta el router
 module.exports = router
