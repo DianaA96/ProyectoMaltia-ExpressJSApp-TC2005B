@@ -65,5 +65,66 @@ router.patch('/:idApplication', async(req, res, next) => {
     }
 })
 
+router.patch('/clients/references/:idClient', async(req, res, next) => {
+    const { idClient } = req.params
+
+    try {//Actualiza client, application y ref
+        let solicitud = await Application.findOne({
+            where:{
+                idClient: idClient
+            }
+        })
+        
+        let cliente = await Client.findByPk(idClient)
+        let referencia1 = await Refer.findOne({
+            where:{
+                idClient: idClient,
+                refName: req.body.body.reference1.refName
+            }
+        })
+        let referencia2 = await Refer.findOne({
+            where:{
+                idClient: idClient,
+                refName: req.body.body.reference2.refName
+            }
+        })
+        let referencia3 = await Refer.findOne({
+            where:{
+                idClient: idClient,
+                refName: req.body.body.reference3.refName
+            }
+        })
+
+        if(solicitud && cliente && referencia1 && referencia2 && referencia3) {
+            await solicitud.update(req.body.body.application)
+            await cliente.update(req.body.body.client)
+            await referencia1.update(req.body.body.reference1)
+            await referencia2.update(req.body.body.reference2)
+            await referencia3.update(req.body.body.reference3)
+            console.log(solicitud);
+            console.log(cliente);
+            console.log(referencia1);
+            console.log(referencia2);
+            console.log(referencia3);
+            return res.status(200).json({
+                solicitudActualizada: solicitud,
+                clienteActualizado: cliente,
+                referenciasActualizadas: {
+                    referencia1,
+                    referencia2,
+                    referencia3
+                }
+            })
+        } else {
+            return res.status(404).json({
+                name: "Not Found",
+                message: "La solicitud, referencias y cliente que intentas modificar no existen :("
+            })
+        }
+    } catch(err) {
+        next(err);
+    }
+})
+
 // Se exporta el router
 module.exports = router
