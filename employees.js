@@ -273,7 +273,7 @@ router.get('/', (req, res, next) => {
 
 
 router.post('/signup', async(req, res, next)=> {
-    const { body } = req;
+    const { body } = req.body;
     console.log("body", body)
 
     try {
@@ -318,7 +318,7 @@ router.post('/signup', async(req, res, next)=> {
 })
 
 router.post('/login', async (req, res, next)=> {
-    const { body } = req;
+    const { body } = req.body;
 
     try {
         const user = await Employee.findOne({
@@ -353,6 +353,7 @@ router.post('/login', async (req, res, next)=> {
             process.env.AUTH_SECRET,
             { expiresIn: 10800 },
             (err, token) => {
+                console.log(token)
                 return res.status(201).json({
                     data: token,
                 });
