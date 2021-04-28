@@ -1,45 +1,50 @@
-const { BOOLEAN } = require("sequelize");
 
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
     return DB.define('employee', {
         idEmployee: {
-             type: type.INTEGER,
-             primaryKey:true,
-             autoIncrement:true,
+             type: type.STRING,
+             primaryKey: true,
          },
+
         nombre: {
              type: type.STRING,
-             noEmpty:true,
+             allowNull: false,
          }, 
+
         apellidoPaterno :{
              type:type. STRING,
-             noEmpty:true,
+             allowNull: false,
          },
+
         apellidoMaterno:{
             type: type.STRING,
          },
+
         correoElectronico: {
              type:type.STRING,
-             noEmpty:true,
+             allowNull: false,
              unique:true,
              validate:{
                  isEmail:true,
              }
          },
+
         numTelefono:{
             type: type.STRING,
-            noEmpty:true,
+            allowNull: false,
             unique:true,
         },
+
         puesto: {
             type:type.STRING,
-            noEmpty:true,
+            allowNull: false,
         },
+        
         contrasena: {
             type:type.STRING,
-            noEmpty:true,
+            allowNull: false,
         }
      },{
-         paranoid:true
+        paranoid:true
      });
 }

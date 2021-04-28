@@ -1,25 +1,26 @@
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
 
-    return DB.define('reference', {
+    return DB.define('refer', {
         idClient: {
              type: type.INTEGER,
              primaryKey: true,
+             foreignKey: true,
              references:{
-                 model: client,
-                 key: idClient
+                 model: 'clients',
+                 key: 'idClient'
             }
         },
 
         refName:{
             type: type.STRING,
             primaryKey: true,
-            noEmpty: true
+            allowNull: false
         },
 
-        refNumber:{
+        numTelefonoReferencia:{
             type: type.STRING,
-            noEmpty:true,
-            unique:true,
+            allowNull: false,
+            unique:true
         }
     },{
         paranoid:true

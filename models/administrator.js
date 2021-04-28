@@ -1,18 +1,20 @@
-module.export=(DB,type) => {
+module.exports = (DB,type) => {
     return DB.define('administrator', {
         idAdministrator: {
-             type: type.INTEGER,
+             type: type.STRING,
              primaryKey:true,
+             foreignKey: true,
              references:{
-                model:employee,
-                key:idEmployee,
+                model: 'employees',
+                key: 'idEmployee',
            }
         },
+        
         departamento:{
             type: type.STRING,
             defaultValue:("OFICINA CENTRAL"),
         }
     },{
-        paranoid:true
-    });
-}
+        paranoid: true
+    })
+};

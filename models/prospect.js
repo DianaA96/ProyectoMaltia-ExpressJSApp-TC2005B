@@ -1,45 +1,51 @@
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
     return DB.define('prospect', {
         idProspect: {
              type: type.INTEGER,
              primaryKey:true,
              autoIncrement:true,
-         },
+        },
+
         idAssessor: {
-            type: type.INTEGER,
+            type: type.STRING,
+            foreignKey: true,
             references:{
-                model:assessor,
-                key:idAssessor,
+                model: 'assessors',
+                key: 'idAssessor',
            }
         },
+
         idStore:{
             type:type.INTEGER,
+            foreignKey: true,
             references:{
-                model:store,
-                key:idStore,
+                model: 'stores',
+                key: 'idStore',
             }
         },
+
         nombre:{
             type: type.STRING,
-            noEmpty:true
+            allowNull: false
         },
+
         apellidoPaterno:{
             type:type.STRING,
-            noEmpty:true
+            allowNull: false
         },
+
         apellidoMaterno:{
             type:type.STRING,
         },
-        fechaRegistro:{
-            type:type.DATE,
-        },
+
         correoElectronico:{
             type:type.STRING,
             unique:true,
         },
+        
         numTelefono:{
             type:type.STRING,
-            noEmpty:true,
+            allowNull: false,
             unique:true,
         }
     },{

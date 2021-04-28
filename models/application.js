@@ -1,49 +1,48 @@
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
 
     return DB.define('application', {
 
         idApplication: {
             type: type.INTEGER,
             primaryKey: true,
+            autoIncrement: true
         },
 
         idAnalyst: {
-            type: type.INTEGER,
+            type: type.STRING,
+            foreignKey: true,
             references:{
-                model: analyst,
-                key: idAnalyst
+                model: 'analysts',
+                key: 'idAnalyst'
            }
         },
 
         idAssessor: {
-            type: type.INTEGER,
+            type: type.STRING,
+            foreignKey: true,
             references:{
-                model: assessor,
-                key: idAssessor
+                model: 'assessors',
+                key: 'idAssessor'
            }
         },
 
         idClient: {
             type: type.INTEGER,
+            foreignKey: true,
             references:{
-                model: client,
-                key: idClient
+                model: 'clients',
+                key: 'idClient'
            }
         },
 
         creditoSolicitado: {
             type: type.ENUM('simple','revolvente'),
-            noEmpty: true,
+            allowNull: false,
         },
 
         montoSolicitado: {
             type: type.FLOAT,
-            noEmpty: true
-        },
-
-        fechaSolicitud: {
-            type: type.DATE,
-            noEmpty: true
+            allowNull: false
         },
 
         estatus: {
@@ -52,7 +51,7 @@ module.export=(DB,type) => {
 
         firmaSolicitud: {
             type: type.BOOLEAN,
-            noEmpty: true
+            allowNull: false
         },
 
         altaIsi: {
@@ -61,6 +60,10 @@ module.export=(DB,type) => {
 
         fechaAlta: {
             type: type.DATE,
+        },
+
+        fechaAuditoria: {
+            type: type.DATE
         },
 
         auditoriaBuro: {
@@ -77,7 +80,6 @@ module.export=(DB,type) => {
 
         creditoAutorizado: {
             type: type.ENUM('simple','revolvente'),
-            noEmpty: true,
         },
 
         montoAutorizado: {

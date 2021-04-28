@@ -1,11 +1,12 @@
-module.export=(DB,type) => {
+module.exports=(DB,type) => {
     return DB.define('assessor', {
         idAssessor: {
-             type: type.INTEGER,
-             primaryKey:true,
+             type: type.STRING,
+             primaryKey: true,
+             foreignKey: true,
              references:{
-                model:employee,
-                key:idEmployee,
+                model: 'employees',
+                key: 'idEmployee',
            }
         }
     },{
