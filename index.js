@@ -111,6 +111,7 @@ app.get('/applications/full-application-data/:idProspecto', async(req, res, next
             [correoElectronico],
             [numClienteZorro],
             [fechaNacimiento],
+            [estatus],
             [direccion],
             [numIne],
                 (SELECT
