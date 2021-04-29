@@ -2,8 +2,9 @@
 const express = require('express');
 const { Sequelize } = require('sequelize');
 const router = express.Router();
-const { Prospect, Assessor } = require('./database');
+const { Prospect, Assessor, Client } = require('./database');
 const { Contact } = require('./database');
+const { Op } = require("sequelize");
 
 // Endpoint para mostrar los datos de un prospecto en el modal de contactos
 router.get('/:idProspecto/contacts', async(req, res, next) => {
@@ -111,6 +112,7 @@ router.patch('/:idProspect', async(req, res, next) => {
     }
 )
 
+
 // Endpoint para insertar prospectos nuevos en la vista de añadir prospecto
 router.post('/', async (req, res, next) => {
     console.log(req.body.body)
@@ -126,18 +128,28 @@ router.post('/', async (req, res, next) => {
 )
 
 //Endpoint que listará todos los prospectos asociados a un asesor
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
 
     const { thisAssessor: idAssessor } = req.query
 
-    Prospect.findAll({attributes:
-     ['idProspect', 'nombre', 'apellidoPaterno', 'apellidoMaterno'],
-     where: {
-         idAssessor
-     } 
-    }) 
-    .then ((prospectos) => {
-        const [ prospectosAsesor ] = prospectos
+    try {
+        if(req.query.name){
+            let prospectos = await Prospect.findAll({attributes:
+                ['idProspect', 'nombre', 'apellidoPaterno', 'apellidoMaterno'],
+                where: {
+                    [Op.and]: [
+                           { idAssessor },
+                           { [Op.or]: [
+                               { 'nombre': { [Op.like]: '%' + req.query.name + '%' } },
+                               { 'apellidoPaterno': { [Op.like]: '%' + req.query.name + '%' } }
+                             ]}
+                         ]
+                    // WHERE idAssessor = 1 AND (nombre LIKE %Diana% OR apellidoPaterno LIKE %Diana%))
+                },
+                order: [['createdAt', 'DESC']] 
+               }) 
+
+            const [ prospectosAsesor ] = prospectos
             if(prospectosAsesor) {
                 return res.status(200).json({prospectos})
             } else {
@@ -147,10 +159,28 @@ router.get('/', (req, res, next) => {
                 })
             }
         }
-    ) 
-    .catch (
-        (err) => next(err)
-        )
+        else{
+            let prospectos = await Prospect.findAll({attributes:
+                ['idProspect', 'nombre', 'apellidoPaterno', 'apellidoMaterno'],
+                where: {idAssessor},
+                order: [['createdAt', 'DESC']] 
+               })
+            
+            const [ prospectosAsesor ] = prospectos
+            if(prospectosAsesor) {
+                return res.status(200).json({prospectos})
+            } else {
+                return res.status(404).json({
+                    name: "Not Found",
+                    message: "Lo sentimos, el asesor aún no tiene prospectos :("
+                })
+            }
+        }
+        
+    } catch (error) {
+        next(error)
+    }
+    
     }
 )
 

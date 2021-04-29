@@ -93,6 +93,7 @@ app.get('/applications/full-application-data/:idProspecto', async(req, res, next
         let info1 = await DB.query(
             `SELECT
             [idProspect] AS [idClient],
+            [idApplication],
             [creditoSolicitado],
             [applications].[idAssessor],
             [nombre],
@@ -106,10 +107,12 @@ app.get('/applications/full-application-data/:idProspecto', async(req, res, next
             [creditoAutorizado],
             [montoAutorizado],
             [montoDispuesto],
+            [montoSolicitado],
             [numTelefono],
             [correoElectronico],
             [numClienteZorro],
             [fechaNacimiento],
+            [estatus],
             [direccion],
             [numIne],
                 (SELECT
