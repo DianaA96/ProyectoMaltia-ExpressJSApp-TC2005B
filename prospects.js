@@ -133,7 +133,7 @@ router.get('/', async (req, res, next) => {
     const { thisAssessor: idAssessor } = req.query
 
     try {
-        if(req.query.name){
+        if(req.query.name){ //Query params para la barra de busqueda
             let prospectos = await Prospect.findAll({attributes:
                 ['idProspect', 'nombre', 'apellidoPaterno', 'apellidoMaterno'],
                 where: {

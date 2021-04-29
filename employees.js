@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { Employee, Analyst } = require('./database');
 const { Assessor, Store } = require('./database');
+const { Op } = require("sequelize");
 
 // Endpoint para actualizar los datos de un analista
 router.patch('/:idEmployee/analysts/', async (req, res, next) => {
@@ -259,16 +260,35 @@ router.delete('/:idEmployee', async (req, res, next) => {
 )
 
 // Endpoint para obtener los datos de todos los empleados
-router.get('/', (req, res, next) => {
-    Employee.findAll({attributes:['idEmployee','nombre', 'apellidoPaterno', 'apellidoMaterno', 'puesto'], order: [['createdAt', 'DESC']]}) 
-    .then ((allEmployees) => {
+router.get('/', async (req, res, next) => {
+    try {
+        if(req.query.name){
+            let empleados = await Employee.findAll({attributes:
+                ['idEmployee','nombre', 'apellidoPaterno', 'apellidoMaterno', 'puesto'],  
+                where: {[Op.or]: [
+                            { 'nombre': { [Op.like]: '%' + req.query.name + '%' } },
+                            { 'apellidoPaterno': { [Op.like]: '%' + req.query.name + '%' } }
+                            ]
+                },
+                order: [['createdAt', 'DESC']] 
+               }) 
+
+            const [ allEmployees ] = empleados
             return res.status(200).json({empleados: allEmployees})
-            }) 
-    .catch (
-        (err) => next(err)
-        )
+        }
+        
+        else{
+            let empleados = await Employee.findAll({attributes:
+                ['idEmployee','nombre', 'apellidoPaterno', 'apellidoMaterno', 'puesto'], 
+                order: [['createdAt', 'DESC']]}) 
+                
+            return res.status(200).json({empleados})
+        }
+    } catch (error) {
+        next(error)
     }
-)
+
+})
 
 
 router.post('/signup', async(req, res, next)=> {
