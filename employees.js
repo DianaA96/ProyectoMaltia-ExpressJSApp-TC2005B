@@ -260,8 +260,7 @@ router.delete('/:idEmployee', async (req, res, next) => {
 
 // Endpoint para obtener los datos de todos los empleados
 router.get('/', (req, res, next) => {
-    Employee.findAll({attributes:
-    ['idEmployee','nombre', 'apellidoPaterno', 'apellidoMaterno', 'puesto']}) 
+    Employee.findAll({attributes:['idEmployee','nombre', 'apellidoPaterno', 'apellidoMaterno', 'puesto'], order: [['createdAt', 'DESC']]}) 
     .then ((allEmployees) => {
             return res.status(200).json({empleados: allEmployees})
             }) 
