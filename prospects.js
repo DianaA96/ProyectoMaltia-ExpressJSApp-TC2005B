@@ -120,7 +120,7 @@ router.post('/', async (req, res, next) => {
 
     try {
         let nuevoProspecto = await Prospect.create(prospectBack)
-        return res.status(201).json(nuevoProspecto)
+        return res.status(201).json({nuevoProspecto})
     } catch(err) {
         next(err);
         }
@@ -183,9 +183,6 @@ router.get('/', async (req, res, next) => {
     
     }
 )
-
-
-
 
 // Se exporta el router
 module.exports = router
