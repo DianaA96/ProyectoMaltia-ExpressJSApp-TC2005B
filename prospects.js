@@ -114,11 +114,11 @@ router.patch('/:idProspect', async(req, res, next) => {
 // Endpoint para insertar prospectos nuevos en la vista de añadir prospecto
 router.post('/', async (req, res, next) => {
     console.log(req.body.body)
-    const { prospect } = req.body.body
+    const { prospectBack } = req.body.body
 
     try {
-        await Prospect.create(prospect)
-        return res.status(201).json({prospect})
+        let nuevoProspecto = await Prospect.create(prospectBack)
+        return res.status(201).json({nuevoProspecto})
     } catch(err) {
         next(err);
         }
