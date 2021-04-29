@@ -273,8 +273,7 @@ router.get('/', async (req, res, next) => {
                 order: [['createdAt', 'DESC']] 
                }) 
 
-            const [ allEmployees ] = empleados
-            return res.status(200).json({empleados: allEmployees})
+            return res.status(200).json({empleados})
         }
         
         else{
