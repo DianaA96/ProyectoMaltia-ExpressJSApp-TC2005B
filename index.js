@@ -96,6 +96,7 @@ app.get('/applications/full-application-data/:idProspecto', async(req, res, next
             [creditoSolicitado],
             [applications].[idAssessor],
             [nombre],
+            [applications].[idApplication],
             [apellidoPaterno],
             [apellidoMaterno],
             [antiguedadZorro],
