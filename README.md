@@ -2,6 +2,8 @@
 
 Aplicación web (servidor - API Rest) desarrollada como parte del bloque Construcción de software y toma de decisiones
 
+![alt text](https://github.com/DianaA96/ProyectoMaltia-ExpressJSApp-TC2005B/blob/main/1.png?raw=true)
+
 ## Scripts disponibles
 
 En modo de desarrollo:
