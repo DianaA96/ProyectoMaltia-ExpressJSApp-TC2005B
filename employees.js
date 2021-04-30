@@ -51,7 +51,7 @@ router.patch('/:idEmployee/analysts/', async (req, res, next) => {
     }
 )
 
-// Endpoint para crear un analista 
+// Endpoint para crear un analista. Encripta contraseña y credenciales funcionan para iniciar sesión.
 router.post('/analysts', async (req, res, next) => {
     
     const { employee, analyst } = req.body
@@ -59,28 +59,58 @@ router.post('/analysts', async (req, res, next) => {
     empleadoAnalista.puesto = "Analista"
     
     try {
-        await Employee.create(empleadoAnalista)
+
+        let user = await Employee.findOne({
+            where: {correoElectronico: employee.correoElectronico},
+        })
+
+        if(user) {
+            return res.status(400).json({
+                message: "Lo sentimos, la cuenta ya existe",
+            })
+        }
+
+        let contrasenaNueva = await bcrypt.hash(empleadoAnalista.contrasena, 10)
+
+        user = {...empleadoAnalista, contrasena: contrasenaNueva}
+
+        await Employee.create(user)
         await Analyst.create({ 
             idAnalyst: employee.idEmployee,
             departamento: analyst.departamento
             })
         let {idEmployee, nombre, apellidoPaterno, apellidoMaterno, correoElectronico, numTelefono, puesto} = empleadoAnalista
-        return res.status(201).json({
-            idEmployee, 
-            nombre, 
-            apellidoPaterno, 
-            apellidoMaterno, 
-            correoElectronico, 
-            numTelefono, 
-            puesto
-        })
+        // return res.status(201).json({
+        //     idEmployee, 
+        //     nombre, 
+        //     apellidoPaterno, 
+        //     apellidoMaterno, 
+        //     correoElectronico, 
+        //     numTelefono, 
+        //     puesto
+        // })
+        console.log("************USUARIO", user)
+        const payload = {
+            idEmployee: user.idEmployee,
+        }
+        jwt.sign(
+            payload,
+            process.env.AUTH_SECRET,
+            { expiresIn: 10800 },
+            (err, token) => {
+                return res.status(201).json({
+                    data: token,
+                });
+            }
+        )
     } catch(err) {
         next(err);
         }
     }
 )
 
-// Endpoint para crear un asesor 
+
+// Endpoint para crear un asesor. Encripta contraseña y credenciales funcionan para iniciar sesión.
 router.post('/assessors', async (req, res, next) => {
     
     const { employee } = req.body
@@ -88,9 +118,38 @@ router.post('/assessors', async (req, res, next) => {
     empleadoAsesor.puesto = "Asesor"
     
     try {
-        await Employee.create(empleadoAsesor)
+        let user = await Employee.findOne({
+            where: {correoElectronico: employee.correoElectronico},
+        })
+
+        if(user) {
+            return res.status(400).json({
+                message: "Lo sentimos, la cuenta ya existe",
+            })
+        }
+
+        let contrasenaNueva = await bcrypt.hash(empleadoAsesor.contrasena, 10)
+
+        user = {...empleadoAsesor, contrasena: contrasenaNueva}
+
+        await Employee.create(user)
         await Assessor.create({ idAssessor: employee.idEmployee })
-        return res.status(201).json({employee: empleadoAsesor})
+        // return res.status(201).json({employee: empleadoAsesor})
+
+        console.log("************USUARIO", user)
+        const payload = {
+            idEmployee: user.idEmployee,
+        }
+        jwt.sign(
+            payload,
+            process.env.AUTH_SECRET,
+            { expiresIn: 10800 },
+            (err, token) => {
+                return res.status(201).json({
+                    data: token,
+                });
+            }
+        )
     } 
     catch(err) {
         next(err);
@@ -290,6 +349,7 @@ router.get('/', async (req, res, next) => {
 })
 
 
+//Endpoint para crear un usuario con credenciales validas desde Insomnia
 router.post('/signup', async(req, res, next)=> {
     const { body } = req.body;
     console.log("body", body)
@@ -335,6 +395,8 @@ router.post('/signup', async(req, res, next)=> {
         }
 })
 
+
+//Endpoint para validar las credenciales con bcrypt
 router.post('/login', async (req, res, next)=> {
     const { body } = req.body;
 
@@ -379,7 +441,7 @@ router.post('/login', async (req, res, next)=> {
         )
 
     } catch (error) {
-        
+    
     }
 })
 
