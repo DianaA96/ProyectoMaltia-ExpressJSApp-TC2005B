@@ -14,7 +14,7 @@ https://github.com/DianaA96/ProyectoMaltia-ReactApp-TC2005B
 
 ## Documentación y Manual de Usuario
 
-
+[Documentacion Maltia Propuesta 3](https://github.com/DianaA96/ProyectoMaltia-ReactApp-TC2005B/files/6404361/DocumentacionMaltiaPropuesta3.pdf)
 
 
 ## Base de Datos
