@@ -10,6 +10,10 @@ En modo de desarrollo:
 
 Inicia la API en [http://localhost:5000](http://localhost:3000).
 
+## Enlace al repositorio complementario de frontend (React App)
+
+https://github.com/DianaA96/ProyectoMaltia-ReactApp-TC2005B
+
 ## Herramientas usadas
 
 ### `bcrypt`
